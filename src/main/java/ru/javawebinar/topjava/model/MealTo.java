@@ -1,20 +1,23 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class MealTo {
-    private final LocalDateTime dateTime;
-
-    private final String description;
-
-    private final int calories;
-
-//    private final AtomicBoolean excess;      // filteredByAtomic (or Boolean[])
+    private UUID uuid;
+    private LocalDateTime dateTime;
+    private String description;
+    private int calories;
+    //    private final AtomicBoolean excess;      // filteredByAtomic (or Boolean[])
 //    private final Boolean excess;            // filteredByReflection
 //    private final Supplier<Boolean> excess;  // filteredByClosure
-private boolean excess;
+    private boolean excess;
 
-    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess) {
+    public MealTo() {
+    }
+
+    public MealTo(LocalDateTime dateTime, String description, int calories, boolean excess, UUID uuid) {
+        this.uuid = uuid;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
@@ -25,11 +28,6 @@ private boolean excess;
 //        return excess.get();
 //    }
 
-    // for filteredBySetterRecursion
-    public void setExcess(boolean excess) {
-        this.excess = excess;
-    }
-
     @Override
     public String toString() {
         return "MealTo{" +
@@ -38,5 +36,30 @@ private boolean excess;
                 ", calories=" + calories +
                 ", excess=" + excess +
                 '}';
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCalories() {
+        return calories;
+    }
+
+    public boolean isExcess() {
+        return excess;
+    }
+
+    // for filteredBySetterRecursion
+    public void setExcess(boolean excess) {
+        this.excess = excess;
+    }
+
+    public UUID getUuid() {
+        return uuid;
     }
 }
