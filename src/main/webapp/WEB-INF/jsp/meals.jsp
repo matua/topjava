@@ -7,16 +7,15 @@
 
     <title>Meals</title>
     <style type="text/css">
-        tr.red {
+        #mealsTable td.red {
             color: red;
             border-color: black
         }
 
-        tr.green {
+        #mealsTable td.green {
             color: green;
             border-color: black
         }
-
     </style>
 </head>
 <body>
@@ -32,7 +31,7 @@
         <th></th>
     </tr>
     <c:forEach var="meal" items="${meals}">
-        <tr class="<c:out value = "${text_color}"/>">
+        <tr>
             <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm"
                            var="parsedDate" type="date" parseLocale="ru_RU"/>
             <fmt:formatDate var="formattedDate" pattern="dd MMM yyyy HH:mm" value="${parsedDate}"/>
@@ -44,9 +43,9 @@
                     <c:set var="text_color" value="green"/>
                 </c:otherwise>
             </c:choose>
-            <td>${formattedDate}</td>
-            <td>${meal.description}</td>
-            <td>${meal.calories}</td>
+            <td class="<c:out value = "${text_color}"/>">${formattedDate}</td>
+            <td class="<c:out value = "${text_color}"/>">${meal.description}</td>
+            <td class="<c:out value = "${text_color}"/>">${meal.calories}</td>
             <td><a href="meals?mealUuid=${meal.uuid}&action=delete"><img src="<c:url value="/img/delete.png"/>"
                                                                          width="21" height="21" alt="delete"></a></td>
             <td><a href="meals?mealUuid=${meal.uuid}&action=edit"><img src="<c:url value="/img/edit.png"/>" width="21"
