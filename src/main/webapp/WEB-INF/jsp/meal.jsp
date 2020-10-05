@@ -29,7 +29,7 @@
     <input type="submit" value="Submit"/>
     <%--    <p></p><a href="meals?action=all">Cancel</a></p>--%>
 
-    <input type="button" name="cancel" value="cancel" onClick="window.location.href='meals?action=all';"/>
+    <input type="button" name="cancel" value="cancel" onClick="window.location.href='meals';"/>
 </form>
 </body>
 </html>

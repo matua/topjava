@@ -4,6 +4,6 @@
     <title>Meals</title>
 </head>
 <body>
-<jsp:forward page="meals?action=all"/>
+<jsp:forward page="meals"/>
 </body>
 </html>
