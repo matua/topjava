@@ -52,7 +52,6 @@
                                                                        height="21" alt="edit"></a></td>
         </tr>
     </c:forEach>
-    <%--    <c:redirect url="meals"/>--%>
 </table>
 </body>
 </html>

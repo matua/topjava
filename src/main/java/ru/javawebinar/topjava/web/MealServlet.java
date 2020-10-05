@@ -54,23 +54,28 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String forward;
         String action = request.getParameter("action");
-        if (action.equalsIgnoreCase("delete")) {
-            UUID mealUuid = UUID.fromString(request.getParameter("mealUuid"));
-            dao.delete(mealUuid);
-            forward = LIST_MEALS;
-            request.setAttribute("meals", getFilteredMeals());
-        } else if (action.equalsIgnoreCase("edit")) {
-            forward = INSERT_OR_EDIT;
-            UUID mealUuid = UUID.fromString(request.getParameter("mealUuid"));
-            Meal meal = dao.getById(mealUuid);
-            request.setAttribute("meal", meal);
-        } else if (action.equalsIgnoreCase("all")) {
-            forward = LIST_MEALS;
-            request.setAttribute("meals", getFilteredMeals());
+        if (action != null) {
+            if (action.equalsIgnoreCase("delete")) {
+                UUID mealUuid = UUID.fromString(request.getParameter("mealUuid"));
+                dao.delete(mealUuid);
+                request.setAttribute("meals", getFilteredMeals());
+                response.sendRedirect(request.getContextPath() + "/meals");
+            } else if (action.equalsIgnoreCase("edit")) {
+                forward = INSERT_OR_EDIT;
+                UUID mealUuid = UUID.fromString(request.getParameter("mealUuid"));
+                Meal meal = dao.getById(mealUuid);
+                request.setAttribute("meal", meal);
+                forward(request, response, forward);
+            } else if (action.equalsIgnoreCase("insert"))
+                forward(request, response, INSERT_OR_EDIT);
         } else {
-            forward = INSERT_OR_EDIT;
+            forward = LIST_MEALS;
+            request.setAttribute("meals", getFilteredMeals());
+            forward(request, response, forward);
         }
+    }
 
+    private void forward(HttpServletRequest request, HttpServletResponse response, String forward) throws ServletException, IOException {
         RequestDispatcher view = request.getRequestDispatcher(forward);
         view.forward(request, response);
     }
