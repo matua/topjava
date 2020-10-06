@@ -20,6 +20,7 @@
 </head>
 <body>
 <H1>Meals</H1>
+<h3><a href="index.jsp">Home</a></h3>
 <p><a href="meals?action=insert">Add Meal</a>
 </p>
 <table border="1" cellpadding="8" cellspacing="0" id="mealsTable">
@@ -34,7 +35,7 @@
         <tr>
             <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm"
                            var="parsedDate" type="date" parseLocale="ru_RU"/>
-            <fmt:formatDate var="formattedDate" pattern="dd MMM yyyy HH:mm" value="${parsedDate}"/>
+            <fmt:formatDate var="formattedDate" pattern="yyyy-MM-dd HH:mm" value="${parsedDate}"/>
             <c:choose>
                 <c:when test="${meal.excess}">
                     <c:set var="text_color" value="red"/>
@@ -46,10 +47,10 @@
             <td class="<c:out value = "${text_color}"/>">${formattedDate}</td>
             <td class="<c:out value = "${text_color}"/>">${meal.description}</td>
             <td class="<c:out value = "${text_color}"/>">${meal.calories}</td>
-            <td><a href="meals?mealUuid=${meal.uuid}&action=delete"><img src="<c:url value="/img/delete.png"/>"
-                                                                         width="21" height="21" alt="delete"></a></td>
-            <td><a href="meals?mealUuid=${meal.uuid}&action=edit"><img src="<c:url value="/img/edit.png"/>" width="21"
-                                                                       height="21" alt="edit"></a></td>
+            <td><a href="meals?mealId=${meal.id}&action=delete"><img src="<c:url value="/img/delete.png"/>"
+                                                                     width="21" height="21" alt="delete"></a></td>
+            <td><a href="meals?mealId=${meal.id}&action=edit"><img src="<c:url value="/img/edit.png"/>" width="21"
+                                                                   height="21" alt="edit"></a></td>
         </tr>
     </c:forEach>
 </table>

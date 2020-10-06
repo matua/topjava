@@ -3,12 +3,11 @@ package ru.javawebinar.topjava.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Meal implements Comparable<Meal> {
-    private UUID uuid;
+public class Meal {
+    private static final AtomicInteger idCounter = new AtomicInteger(0);
+    private int id;
     private LocalDateTime dateTime;
 
     private String description;
@@ -16,14 +15,15 @@ public class Meal implements Comparable<Meal> {
     private int calories;
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
-        this.uuid = UUID.randomUUID();
+        this.id = idCounter.incrementAndGet();
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
     }
 
     public Meal() {
-        this.uuid = UUID.randomUUID();
+        this.id = idCounter.incrementAndGet();
+
     }
 
     public LocalDateTime getDateTime() {
@@ -61,39 +61,12 @@ public class Meal implements Comparable<Meal> {
         return dateTime.toLocalTime();
     }
 
-    public UUID getUuid() {
-        return uuid;
+    public int getId() {
+        return id;
     }
 
-    public Meal setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public Meal setId(int id) {
+        this.id = id;
         return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Meal meal = (Meal) o;
-
-        if (calories != meal.calories) return false;
-        if (!Objects.equals(uuid, meal.uuid)) return false;
-        if (!Objects.equals(dateTime, meal.dateTime)) return false;
-        return Objects.equals(description, meal.description);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = uuid != null ? uuid.hashCode() : 0;
-        result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + calories;
-        return result;
-    }
-
-    @Override
-    public int compareTo(Meal o) {
-        return this.dateTime.compareTo(o.dateTime);
     }
 }

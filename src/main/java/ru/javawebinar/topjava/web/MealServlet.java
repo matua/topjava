@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web;
 
+import ru.javawebinar.topjava.dao.MealDao;
 import ru.javawebinar.topjava.dao.MealDaoMemoryImpl;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealTo;
@@ -14,17 +15,15 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.UUID;
 
 public class MealServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String INSERT_OR_EDIT = "/WEB-INF/jsp/meal.jsp";
     private static final String LIST_MEALS = "/WEB-INF/jsp/meals.jsp";
-    private MealDaoMemoryImpl dao;
+    private MealDao dao;
 
     @Override
-    public void init() throws ServletException {
-        super.init();
+    public void init() {
         dao = new MealDaoMemoryImpl(MealsUtil.getMeals());
     }
 
@@ -37,13 +36,13 @@ public class MealServlet extends HttpServlet {
         Meal meal = new Meal();
         meal.setDateTime(LocalDateTime.parse(request.getParameter("DateTime")));
         meal.setDescription(request.getParameter("Description"));
-        meal.setCalories(Integer.parseInt(request.getParameter("Calories")));
+        meal.setCalories(getId(request.getParameter("Calories")));
+        String mealId = request.getParameter("mealId");
 
-        String mealUuid = request.getParameter("mealUuid");
-        if (mealUuid == null || mealUuid.isEmpty()) {
+        if (dao.getById(getId(mealId)) == null) {
             dao.add(meal);
         } else {
-            meal.setUuid(UUID.fromString(mealUuid));
+            meal.setId(getId(mealId));
             dao.update(meal);
         }
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEALS);
@@ -51,26 +50,33 @@ public class MealServlet extends HttpServlet {
         view.forward(request, response);
     }
 
+    private int getId(String mealId) {
+        return Integer.parseInt(mealId);
+    }
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String forward;
         String action = request.getParameter("action");
         if (action != null) {
-            if (action.equalsIgnoreCase("delete")) {
-                UUID mealUuid = UUID.fromString(request.getParameter("mealUuid"));
-                dao.delete(mealUuid);
-                request.setAttribute("meals", getFilteredMeals());
-                response.sendRedirect(request.getContextPath() + "/meals");
-            } else if (action.equalsIgnoreCase("edit")) {
-                forward = INSERT_OR_EDIT;
-                UUID mealUuid = UUID.fromString(request.getParameter("mealUuid"));
-                Meal meal = dao.getById(mealUuid);
-                request.setAttribute("meal", meal);
-                forward(request, response, forward);
-            } else if (action.equalsIgnoreCase("insert")) {
-                LocalDateTime now = LocalDateTime.now();
-                request.setAttribute("now", now);
-                request.setAttribute("insert", "insert");
-                forward(request, response, INSERT_OR_EDIT);
+            switch (action) {
+                case "delete":
+                    int mealId = getId(request.getParameter("mealId"));
+                    dao.delete(mealId);
+                    request.setAttribute("meals", getFilteredMeals());
+                    response.sendRedirect(request.getContextPath() + "/meals");
+                    break;
+                case "edit":
+                    forward = INSERT_OR_EDIT;
+                    mealId = getId(request.getParameter("mealId"));
+                    Meal meal = dao.getById(mealId);
+                    request.setAttribute("meal", meal);
+                    forward(request, response, forward);
+                    break;
+                default:
+                    LocalDateTime now = LocalDateTime.now();
+                    request.setAttribute("now", now);
+                    request.setAttribute("insert", "insert");
+                    forward(request, response, INSERT_OR_EDIT);
             }
         } else {
             forward = LIST_MEALS;
@@ -79,7 +85,8 @@ public class MealServlet extends HttpServlet {
         }
     }
 
-    private void forward(HttpServletRequest request, HttpServletResponse response, String forward) throws ServletException, IOException {
+    private void forward(HttpServletRequest request, HttpServletResponse response, String forward) throws
+            ServletException, IOException {
         RequestDispatcher view = request.getRequestDispatcher(forward);
         view.forward(request, response);
     }

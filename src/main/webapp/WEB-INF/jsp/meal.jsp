@@ -7,19 +7,19 @@
     <title>Add/Update Meal</title>
 </head>
 <body>
-<H1>Add/Update Meal</H1>
-
+<c:choose>
+    <c:when test="${insert==\"insert\"}">
+        <c:set var="pageName" value="Add"/>
+        <c:set var="time" value="${now}"/>
+    </c:when>
+    <c:otherwise>
+        <c:set var="pageName" value="Update"/>
+        <c:set var="time" value="${meal.dateTime}"/>
+    </c:otherwise>
+</c:choose>
+<H1>${pageName} Meal</H1>
 <form method="POST" action='meals' name="frmAddMeal">
-    <p>Meal UUID : ${meal.uuid}</p><br/>
-    <input name="mealUuid" type="hidden" value="${meal.uuid}">
-    <c:choose>
-        <c:when test="${insert==\"insert\"}">
-            <c:set var="time" value="${now}"/>
-        </c:when>
-        <c:otherwise>
-            <c:set var="time" value="${meal.dateTime}"/>
-        </c:otherwise>
-    </c:choose>
+    <input name="mealId" type="hidden" value="${meal.id}">
     <fmt:parseDate value="${time}" pattern="yyyy-MM-dd'T'HH:mm"
                    var="parsedDate"/>
     <fmt:formatDate var="formattedDate" pattern="yyyy-MM-dd'T'HH:mm" value="${parsedDate}"/>
