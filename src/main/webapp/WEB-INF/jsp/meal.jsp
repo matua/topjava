@@ -12,7 +12,15 @@
 <form method="POST" action='meals' name="frmAddMeal">
     <p>Meal UUID : ${meal.uuid}</p><br/>
     <input name="mealUuid" type="hidden" value="${meal.uuid}">
-    <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm"
+    <c:choose>
+        <c:when test="${insert==\"insert\"}">
+            <c:set var="time" value="${now}"/>
+        </c:when>
+        <c:otherwise>
+            <c:set var="time" value="${meal.dateTime}"/>
+        </c:otherwise>
+    </c:choose>
+    <fmt:parseDate value="${time}" pattern="yyyy-MM-dd'T'HH:mm"
                    var="parsedDate"/>
     <fmt:formatDate var="formattedDate" pattern="yyyy-MM-dd'T'HH:mm" value="${parsedDate}"/>
 
@@ -27,8 +35,6 @@
             value="<c:out value="${meal.calories}" />"/></p> <br/>
 
     <input type="submit" value="Submit"/>
-    <%--    <p></p><a href="meals?action=all">Cancel</a></p>--%>
-
     <input type="button" name="cancel" value="cancel" onClick="window.location.href='meals';"/>
 </form>
 </body>

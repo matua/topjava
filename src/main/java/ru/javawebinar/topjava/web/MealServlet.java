@@ -66,8 +66,12 @@ public class MealServlet extends HttpServlet {
                 Meal meal = dao.getById(mealUuid);
                 request.setAttribute("meal", meal);
                 forward(request, response, forward);
-            } else if (action.equalsIgnoreCase("insert"))
+            } else if (action.equalsIgnoreCase("insert")) {
+                LocalDateTime now = LocalDateTime.now();
+                request.setAttribute("now", now);
+                request.setAttribute("insert", "insert");
                 forward(request, response, INSERT_OR_EDIT);
+            }
         } else {
             forward = LIST_MEALS;
             request.setAttribute("meals", getFilteredMeals());
