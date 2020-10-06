@@ -2,14 +2,14 @@ package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class MealDaoMemoryImpl implements MealDao {
-    private final List<Meal> meals;
+    private final CopyOnWriteArrayList<Meal> meals;
 
     public MealDaoMemoryImpl(List<Meal> meals) {
-        this.meals = new LinkedList<>(meals);
+        this.meals = new CopyOnWriteArrayList<>(meals);
     }
 
     @Override

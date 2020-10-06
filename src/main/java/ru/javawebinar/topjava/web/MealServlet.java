@@ -36,22 +36,18 @@ public class MealServlet extends HttpServlet {
         Meal meal = new Meal();
         meal.setDateTime(LocalDateTime.parse(request.getParameter("DateTime")));
         meal.setDescription(request.getParameter("Description"));
-        meal.setCalories(getId(request.getParameter("Calories")));
+        meal.setCalories(Integer.parseInt(request.getParameter("Calories")));
         String mealId = request.getParameter("mealId");
 
-        if (dao.getById(getId(mealId)) == null) {
+        if (dao.getById(Integer.parseInt(mealId)) == null) {
             dao.add(meal);
         } else {
-            meal.setId(getId(mealId));
+            meal.setId(Integer.parseInt(mealId));
             dao.update(meal);
         }
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEALS);
         request.setAttribute("meals", getFilteredMeals());
         view.forward(request, response);
-    }
-
-    private int getId(String mealId) {
-        return Integer.parseInt(mealId);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -60,14 +56,14 @@ public class MealServlet extends HttpServlet {
         if (action != null) {
             switch (action) {
                 case "delete":
-                    int mealId = getId(request.getParameter("mealId"));
+                    int mealId = Integer.parseInt(request.getParameter("mealId"));
                     dao.delete(mealId);
                     request.setAttribute("meals", getFilteredMeals());
                     response.sendRedirect(request.getContextPath() + "/meals");
                     break;
                 case "edit":
                     forward = INSERT_OR_EDIT;
-                    mealId = getId(request.getParameter("mealId"));
+                    mealId = Integer.parseInt(request.getParameter("mealId"));
                     Meal meal = dao.getById(mealId);
                     request.setAttribute("meal", meal);
                     forward(request, response, forward);
