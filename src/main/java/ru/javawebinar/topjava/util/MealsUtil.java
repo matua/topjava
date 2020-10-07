@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -46,12 +45,7 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static List<MealTo> getMealsTo(Map<Integer, Meal> meals, int caloriesPerDay) {
-        List<Meal> mealsTo = new ArrayList<>();
-        for (Map.Entry<Integer, Meal> entry : meals.entrySet()) {
-            mealsTo.add(entry.getValue());
-        }
-
-        return filteredByStreams(mealsTo, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
+    public static List<MealTo> getMealsTo(List<Meal> meals, int caloriesPerDay) {
+        return filteredByStreams(meals, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
     }
 }

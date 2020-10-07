@@ -25,7 +25,6 @@
 </p>
 <table border="1" cellpadding="8" cellspacing="0" id="mealsTable">
     <tr>
-        <th>Id</th>
         <th>Date</th>
         <th>Description</th>
         <th>Calories</th>
@@ -34,11 +33,10 @@
     </tr>
     <c:forEach var="meal" items="${meals}">
         <c:set var="text_color" value="${meal.excess ? 'red' : 'green'}"/>
-        <tr class="<c:out value = "${text_color}"/>">
+        <tr class="${text_color}">
             <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm"
                            var="parsedDate" type="date" parseLocale="ru_RU"/>
             <fmt:formatDate var="formattedDate" pattern="yyyy-MM-dd HH:mm" value="${parsedDate}"/>
-            <td>${meal.id}</td>
             <td>${formattedDate}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>

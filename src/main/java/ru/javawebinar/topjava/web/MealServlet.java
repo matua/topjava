@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.dao.MealDao;
 import ru.javawebinar.topjava.dao.MealDaoMemoryImpl;
 import ru.javawebinar.topjava.model.Meal;
@@ -16,6 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class MealServlet extends HttpServlet {
+    public static final int CALORIES_PER_DAY = 2000;
+    private static final Logger logger = LoggerFactory.getLogger(MealServlet.class);
     private static final long serialVersionUID = 1L;
     private static final String INSERT_OR_EDIT = "/WEB-INF/jsp/meal.jsp";
     private static final String LIST_MEALS = "/WEB-INF/jsp/meals.jsp";
@@ -29,9 +33,10 @@ public class MealServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal();
-        meal.setDateTime(LocalDateTime.parse(request.getParameter("DateTime")));
-        meal.setDescription(request.getParameter("Description"));
-        meal.setCalories(Integer.parseInt(request.getParameter("Calories")));
+        meal.setDateTime(LocalDateTime.parse(request.getParameter("DateTime")))
+                .setDescription(request.getParameter("Description"))
+                .setCalories(Integer.parseInt(request.getParameter("Calories")));
+
         String mealId = request.getParameter("mealId");
         int mealIdParsed = Integer.parseInt(mealId);
 
@@ -41,9 +46,11 @@ public class MealServlet extends HttpServlet {
             meal.setId(mealIdParsed);
             dao.update(meal);
         }
+
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEALS);
-        request.setAttribute("meals", getMealsTo());
         response.sendRedirect(request.getContextPath() + "/meals");
+        logger.debug("Redirection to meals");
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,6 +63,7 @@ public class MealServlet extends HttpServlet {
                     dao.delete(mealId);
                     request.setAttribute("meals", getMealsTo());
                     response.sendRedirect(request.getContextPath() + "/meals");
+                    logger.debug("Redirection to meals");
                     break;
                 case "edit":
                     forward = INSERT_OR_EDIT;
@@ -63,24 +71,27 @@ public class MealServlet extends HttpServlet {
                     Meal meal = dao.getById(mealId);
                     request.setAttribute("meal", meal);
                     forward(request, response, forward);
+                    logger.debug("Forwarding to meal.jsp");
                     break;
                 case "insert":
                     LocalDateTime now = LocalDateTime.now();
                     request.setAttribute("now", now);
-                    request.setAttribute("insert", "insert");
                     forward(request, response, INSERT_OR_EDIT);
+                    logger.debug("Forwarding to meal.jsp");
                 default:
                     response.sendRedirect(request.getContextPath() + "/meals");
+                    logger.debug("Redirection to meals");
             }
         } else {
             forward = LIST_MEALS;
             request.setAttribute("meals", getMealsTo());
             forward(request, response, forward);
+            logger.debug("Forwarding to meals.jsp");
         }
     }
 
     private List<MealTo> getMealsTo() {
-        return MealsUtil.getMealsTo(dao.getAll(), 2000);
+        return MealsUtil.getMealsTo(dao.getAll(), CALORIES_PER_DAY);
     }
 
     private void forward(HttpServletRequest request, HttpServletResponse response, String forward) throws

@@ -2,7 +2,7 @@ package ru.javawebinar.topjava.dao;
 
 import ru.javawebinar.topjava.model.Meal;
 
-import java.util.Map;
+import java.util.List;
 
 public interface MealDao {
     Meal getById(int uuid);
@@ -13,5 +13,5 @@ public interface MealDao {
 
     Meal update(Meal meal);
 
-    Map<Integer, Meal> getAll();
+    List<Meal> getAll();
 }

@@ -7,8 +7,8 @@
     <title>Add/Update Meal</title>
 </head>
 <body>
-<c:set var="pagename" value="${insert==\"insert\" ? 'Add' : 'Update'}"/>
-<c:set var="time" value="${insert==\"insert\" ? now : meal.dateTime}"/>
+<c:set var="pageName" value="${meal.id == 0 ? 'Add' : 'Update'}"/>
+<c:set var="time" value="${meal.id == 0 ? now : meal.dateTime}"/>
 <H1>${pageName} Meal</H1>
 <form method="POST" action='meals' name="frmAddMeal">
     <input name="mealId" type="hidden" value="${meal.id}">
