@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 public class MealServlet extends HttpServlet {
@@ -24,30 +23,27 @@ public class MealServlet extends HttpServlet {
 
     @Override
     public void init() {
-        dao = new MealDaoMemoryImpl(MealsUtil.getMeals());
+        dao = new MealDaoMemoryImpl(MealsUtil.meals);
     }
 
-    private List<MealTo> getFilteredMeals() {
-        return MealsUtil.filteredByStreams(dao.getAll(), LocalTime.MIN, LocalTime.MAX, 2000);
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         Meal meal = new Meal();
         meal.setDateTime(LocalDateTime.parse(request.getParameter("DateTime")));
         meal.setDescription(request.getParameter("Description"));
         meal.setCalories(Integer.parseInt(request.getParameter("Calories")));
         String mealId = request.getParameter("mealId");
+        int mealIdParsed = Integer.parseInt(mealId);
 
-        if (dao.getById(Integer.parseInt(mealId)) == null) {
+        if (mealIdParsed == 0) {
             dao.add(meal);
         } else {
-            meal.setId(Integer.parseInt(mealId));
+            meal.setId(mealIdParsed);
             dao.update(meal);
         }
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEALS);
-        request.setAttribute("meals", getFilteredMeals());
-        view.forward(request, response);
+        request.setAttribute("meals", getMealsTo());
+        response.sendRedirect(request.getContextPath() + "/meals");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,7 +54,7 @@ public class MealServlet extends HttpServlet {
                 case "delete":
                     int mealId = Integer.parseInt(request.getParameter("mealId"));
                     dao.delete(mealId);
-                    request.setAttribute("meals", getFilteredMeals());
+                    request.setAttribute("meals", getMealsTo());
                     response.sendRedirect(request.getContextPath() + "/meals");
                     break;
                 case "edit":
@@ -68,17 +64,23 @@ public class MealServlet extends HttpServlet {
                     request.setAttribute("meal", meal);
                     forward(request, response, forward);
                     break;
-                default:
+                case "insert":
                     LocalDateTime now = LocalDateTime.now();
                     request.setAttribute("now", now);
                     request.setAttribute("insert", "insert");
                     forward(request, response, INSERT_OR_EDIT);
+                default:
+                    response.sendRedirect(request.getContextPath() + "/meals");
             }
         } else {
             forward = LIST_MEALS;
-            request.setAttribute("meals", getFilteredMeals());
+            request.setAttribute("meals", getMealsTo());
             forward(request, response, forward);
         }
+    }
+
+    private List<MealTo> getMealsTo() {
+        return MealsUtil.getMealsTo(dao.getAll(), 2000);
     }
 
     private void forward(HttpServletRequest request, HttpServletResponse response, String forward) throws
