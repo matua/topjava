@@ -14,7 +14,7 @@ public class MealDaoMemoryImpl implements MealDao {
 
     public MealDaoMemoryImpl(List<Meal> mealList) {
         this.meals = new ConcurrentHashMap<>();
-        mealList.forEach(meal -> meals.put(meal.getId(), meal));
+        mealList.forEach(this::add);
     }
 
     @Override
@@ -36,7 +36,10 @@ public class MealDaoMemoryImpl implements MealDao {
     }
 
     @Override
-    public Meal update(Meal meal) {
+    public synchronized Meal update(Meal meal) {
+        if (meals.get(meal.getId()) == null) {
+            return null;
+        }
         meals.put(meal.getId(), meal);
         return meals.get(meal.getId());
     }

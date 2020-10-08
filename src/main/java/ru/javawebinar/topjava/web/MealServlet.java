@@ -50,7 +50,6 @@ public class MealServlet extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(LIST_MEALS);
         response.sendRedirect(request.getContextPath() + "/meals");
         logger.debug("Redirection to meals");
-
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
