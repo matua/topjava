@@ -32,8 +32,7 @@
         <th></th>
     </tr>
     <c:forEach var="meal" items="${meals}">
-        <c:set var="text_color" value="${meal.excess ? 'red' : 'green'}"/>
-        <tr class="${text_color}">
+        <tr class="${meal.excess ? 'red' : 'green'}">
             <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm"
                            var="parsedDate" type="date" parseLocale="ru_RU"/>
             <fmt:formatDate var="formattedDate" pattern="yyyy-MM-dd HH:mm" value="${parsedDate}"/>
