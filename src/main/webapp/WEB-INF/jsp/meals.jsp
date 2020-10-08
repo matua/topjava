@@ -32,6 +32,7 @@
         <th></th>
     </tr>
     <c:forEach var="meal" items="${meals}">
+        <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.MealTo"/>
         <tr class="${meal.excess ? 'red' : 'green'}">
             <fmt:parseDate value="${meal.dateTime}" pattern="yyyy-MM-dd'T'HH:mm"
                            var="parsedDate" type="date" parseLocale="ru_RU"/>
