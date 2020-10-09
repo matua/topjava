@@ -36,12 +36,8 @@ public class MealDaoMemoryImpl implements MealDao {
     }
 
     @Override
-    public synchronized Meal update(Meal meal) {
-        if (meals.get(meal.getId()) == null) {
-            return null;
-        }
-        meals.put(meal.getId(), meal);
-        return meals.get(meal.getId());
+    public Meal update(Meal meal) {
+        return meals.computeIfPresent(meal.getId(), (id, oldMeal) -> meal);
     }
 
     @Override
