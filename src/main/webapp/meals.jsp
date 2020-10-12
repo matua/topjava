@@ -49,6 +49,22 @@
             </tr>
         </c:forEach>
     </table>
+    <br>
+    <form id="filter">
+        <label for="startDate">From date (inclusive)</label>
+        <input input type="date" name="startDate" id="startDate" autocomplete="off">
+        <label for="endDate">To date (inclusive)</label>
+        <input input type="date" name="endDate" id="endDate" autocomplete="off">
+        <br>
+        <br>
+        <label for="startTime">From time (inclusive)</label>
+        <input input type="time" name="startTime" id="startTime" autocomplete="off">
+        <label for="endTime">To time (exclusive)</label>
+        <input input type="time" name="endTime" id="endTime" autocomplete="off">
+        <p>
+            <input type="submit" value="Submit">
+        </p>
+    </form>
 </section>
 </body>
 </html>

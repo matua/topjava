@@ -15,17 +15,29 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MealsUtil {
-    public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
-    public static final List<Meal> meals = Arrays.asList(
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500),
-            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
+    public static final int DEFAULT_CALORIES_PER_DAY = 2000;
+    protected static final List<Meal> meals = Arrays.asList(
+            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
+            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
+            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
+            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
+            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
+            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 21, 9, 0), "Бананы", 100),
+            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 22, 8, 0), "Ананасы", 200),
+            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 24, 6, 0), "Груши", 100),
+            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 25, 10, 0), "Виноград", 250),
+            new Meal(2, LocalDateTime.of(2020, Month.OCTOBER, 28, 10, 0), "Апельсины", 450),
+            new Meal(2, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
     );
+
+    private MealsUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static List<Meal> getMeals() {
+        return meals;
+    }
 
     public static List<MealTo> getTos(Collection<Meal> meals, int caloriesPerDay) {
         return filterByPredicate(meals, caloriesPerDay, meal -> true);
