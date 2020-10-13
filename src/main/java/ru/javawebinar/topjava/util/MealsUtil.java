@@ -18,17 +18,16 @@ public class MealsUtil {
 
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
     protected static final List<Meal> meals = Arrays.asList(
-            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500),
-            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000),
-            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500),
-            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100),
-            new Meal(1, LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000),
-            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 21, 9, 0), "Бананы", 100),
-            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 22, 8, 0), "Ананасы", 200),
-            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 24, 6, 0), "Груши", 100),
-            new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 25, 10, 0), "Виноград", 250),
-            new Meal(2, LocalDateTime.of(2020, Month.OCTOBER, 28, 10, 0), "Апельсины", 450),
-            new Meal(2, LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500, 1),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000, 1),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 5000, 1),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100, 1),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000, 1),
+            new Meal(LocalDateTime.of(2020, Month.OCTOBER, 22, 8, 0), "Ананасы", 200, 1),
+            new Meal(LocalDateTime.of(2020, Month.OCTOBER, 24, 6, 0), "Груши", 100, 1),
+            new Meal(LocalDateTime.of(2020, Month.OCTOBER, 25, 10, 0), "Виноград", 250, 1),
+            new Meal(LocalDateTime.of(2020, Month.OCTOBER, 28, 10, 0), "Апельсины", 450, 2),
+            new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410, 2)
     );
 
     private MealsUtil() {

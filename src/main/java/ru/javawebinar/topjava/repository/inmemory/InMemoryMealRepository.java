@@ -7,10 +7,10 @@ import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,42 +34,50 @@ public class InMemoryMealRepository implements MealRepository {
             return meal;
         }
         // handle case: update, but not present in storage
-        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> meal.setUserId(userId));
+        return repository.computeIfPresent(meal.getId(), (id, oldMeal) -> {
+            meal.setUserId(userId);
+            return meal;
+        });
     }
 
     @Override
-    public boolean delete(int id) {
-        return repository.remove(id) != null;
+    public boolean delete(int id, int userId) {
+        Meal meal = repository.get(id);
+        if (meal != null && meal.getUserId() == userId) {
+            return repository.remove(id) != null;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    public Meal get(int id) {
-        return repository.get(id);
+    public Meal get(int id, int userId) {
+        Meal meal = repository.get(id);
+        if (meal != null && meal.getUserId() == userId) {
+            return meal;
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public Collection<Meal> getAll() {
+    public List<Meal> getAll(int userId) {
         return repository.values().stream()
+                .filter(meal -> meal.getUserId() == userId)
                 .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .collect(Collectors.toList());
     }
 
-    public Collection<Meal> getFilteredByDateAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        if (startDate != null && endDate != null && startTime == null && endTime == null) {
-            return getAll().stream().filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDate(), startDate, endDate))
-                    .collect(Collectors.toList());
-        } else if (startDate == null && endDate == null && startTime != null && endTime != null) {
-            return getAll().stream()
-                    .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(), startTime, endTime))
-                    .collect(Collectors.toList());
-        } else if (startDate != null && endDate != null && startTime != null && endTime != null) {
-            return getAll().stream()
-                    .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getDateTime(),
-                            LocalDateTime.of(startDate, startTime),
-                            LocalDateTime.of(endDate, endTime)))
-                    .collect(Collectors.toList());
-        } else {
-            return getAll();
-        }
+    public Collection<Meal> getFilteredByDateAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId) {
+        return repository.values().stream()
+                .filter(meal -> DateTimeUtil.isBetweenHalfOpen(meal.getTime(),
+                        startTime == null ? LocalTime.MIN : startTime,
+                        endTime == null ? LocalTime.MAX : endTime)
+                        && DateTimeUtil.isBetweenHalfOpen(meal.getDate(),
+                        startDate == null ? LocalDate.MIN : startDate,
+                        endDate == null ? LocalDate.MAX : endDate)
+                        && meal.getUserId() == userId)
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
+                .collect(Collectors.toList());
     }
 }

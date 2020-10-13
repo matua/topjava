@@ -28,7 +28,7 @@ public class SpringMain {
             MealService mealService = appCtx.getBean(MealService.class);
 
             //testing Spring injections
-            mealRestController.create(new Meal(1, LocalDateTime.of(2020, Month.OCTOBER, 12, 20, 58), "Поздний ужин", 300));
+            mealRestController.create(new Meal(LocalDateTime.of(2020, Month.OCTOBER, 12, 20, 58), "Поздний ужин", 300, 1));
             mealService.getAll(null, null, null, null, 1)
                     .forEach(meal -> log.info("Meal {}", meal));
         }

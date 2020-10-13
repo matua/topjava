@@ -53,7 +53,7 @@
     <form id="filter">
         <label for="startDate">From date (inclusive)</label>
         <input input type="date" name="startDate" id="startDate" autocomplete="off">
-        <label for="endDate">To date (inclusive)</label>
+        <label for="endDate">To date (exclusive)</label>
         <input input type="date" name="endDate" id="endDate" autocomplete="off">
         <br>
         <br>
