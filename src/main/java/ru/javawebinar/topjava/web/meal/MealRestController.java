@@ -36,11 +36,6 @@ public class MealRestController {
         return new ArrayList<>(service.getAll(startDate, endDate, startTime, endTime, authUserId()));
     }
 
-    public List<Meal> getAll() {
-        log.info("getAllNoParams");
-        return new ArrayList<>(service.getAll(null, null, null, null, authUserId()));
-    }
-
     public List<MealTo> getAllTos(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         log.info("getAllTos");
         return MealsUtil.getTos(getAll(startDate, endDate, startTime, endTime), SecurityUtil.authUserCaloriesPerDay());

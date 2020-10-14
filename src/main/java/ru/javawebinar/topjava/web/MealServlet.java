@@ -36,7 +36,7 @@ public class MealServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         request.setCharacterEncoding("UTF-8");
         String id = request.getParameter("id");
 
@@ -57,10 +57,6 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        String user = request.getParameter("user");
-        if (user != null) {
-            SecurityUtil.setAuthUserId(Integer.parseInt(user));
-        }
 
         LocalDate startDate = request.getParameter("startDate") == null || request.getParameter("startDate").isEmpty() ? null : LocalDate.parse(request.getParameter("startDate"));
         LocalDate endDate = request.getParameter("endDate") == null || request.getParameter("endDate").isEmpty() ? null : LocalDate.parse(request.getParameter("endDate"));
