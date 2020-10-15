@@ -52,15 +52,15 @@
     <br>
     <form id="filter">
         <label for="startDate">From date (inclusive)</label>
-        <input input type="date" name="startDate" id="startDate" autocomplete="off">
+        <input input type="date" value="${param.startDate}" name="startDate" id="startDate" autocomplete="off">
         <label for="endDate">To date (exclusive)</label>
-        <input input type="date" name="endDate" id="endDate" autocomplete="off">
+        <input input type="date" value="${param.endDate}" name="endDate" id="endDate" autocomplete="off">
         <br>
         <br>
         <label for="startTime">From time (inclusive)</label>
-        <input input type="time" name="startTime" id="startTime" autocomplete="off">
+        <input input type="time" value="${param.startTime}" name="startTime" id="startTime" autocomplete="off">
         <label for="endTime">To time (exclusive)</label>
-        <input input type="time" name="endTime" id="endTime" autocomplete="off">
+        <input input type="time" value="${param.endTime}" name="endTime" id="endTime" autocomplete="off">
         <p>
             <input type="submit" value="Submit">
         </p>

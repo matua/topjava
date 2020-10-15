@@ -9,6 +9,8 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
+
 @Service
 public class MealService {
     private final MealRepository repository;
@@ -21,20 +23,23 @@ public class MealService {
         return repository.save(meal, userId);
     }
 
-    public void delete(Integer id, int userId) {
-        repository.delete(id, userId);
+    public void delete(int id, int userId) {
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
-    public Meal get(Integer id, int userId) {
-        return repository.get(id, userId);
+    public Meal get(int id, int userId) {
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
     public List<Meal> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId) {
         return new ArrayList<>(repository.getFilteredByDateAll(startDate, endDate, startTime, endTime, userId));
+    }
 
+    public List<Meal> getAll(int userId) {
+        return new ArrayList<>(repository.getAll(userId));
     }
 
     public void update(Meal meal, int userId) {
-        repository.save(meal, userId);
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 }

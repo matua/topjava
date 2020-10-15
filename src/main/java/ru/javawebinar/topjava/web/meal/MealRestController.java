@@ -8,7 +8,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
 import java.time.LocalDate;
@@ -22,8 +21,7 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Controller
 public class MealRestController {
-    public static final String MEAL_NOT_FOUND_OR_BELONGS_TO_A_DIFFERENT_USER = "Meal not found or belongs to a different user";
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = LoggerFactory.getLogger(MealRestController.class);
     private final MealService service;
 
     @Autowired
@@ -31,22 +29,24 @@ public class MealRestController {
         this.service = service;
     }
 
-    public List<Meal> getAll(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public List<Meal> getAll() {
         log.info("getAll");
-        return new ArrayList<>(service.getAll(startDate, endDate, startTime, endTime, authUserId()));
+        return new ArrayList<>(service.getAll(authUserId()));
     }
 
-    public List<MealTo> getAllTos(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+    public List<MealTo> getAllTos() {
         log.info("getAllTos");
-        return MealsUtil.getTos(getAll(startDate, endDate, startTime, endTime), SecurityUtil.authUserCaloriesPerDay());
+        return MealsUtil.getTos(getAll(), SecurityUtil.authUserCaloriesPerDay());
+    }
+
+    public List<MealTo> getFilteredByDateTimeTos(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        log.info("getAllTos");
+        return MealsUtil.getTos(service.getAll(startDate, endDate, startTime, endTime, authUserId()), SecurityUtil.authUserCaloriesPerDay());
     }
 
     public Meal get(int id) {
         log.info("get {}", id);
         Meal meal = service.get(id, authUserId());
-        if (meal == null) {
-            throw new NotFoundException(MEAL_NOT_FOUND_OR_BELONGS_TO_A_DIFFERENT_USER);
-        }
         return meal;
     }
 
@@ -63,19 +63,12 @@ public class MealRestController {
     }
 
     private void checkMeal(int id) {
-        Meal meal = service.get(id, authUserId());
-        if (meal == null) {
-            throw new NotFoundException(MEAL_NOT_FOUND_OR_BELONGS_TO_A_DIFFERENT_USER);
-        }
+        service.get(id, authUserId());
     }
 
     public void update(Meal meal, int id) {
         log.info("update {} with id={}", meal, id);
         assureIdConsistent(meal, id);
-        Meal mealToCheck = service.get(meal.getId(), authUserId());
-        if (mealToCheck == null) {
-            throw new NotFoundException(MEAL_NOT_FOUND_OR_BELONGS_TO_A_DIFFERENT_USER);
-        }
         service.update(meal, authUserId());
     }
 }

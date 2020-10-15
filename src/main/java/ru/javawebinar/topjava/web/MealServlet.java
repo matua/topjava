@@ -58,11 +58,6 @@ public class MealServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
 
-        LocalDate startDate = request.getParameter("startDate") == null || request.getParameter("startDate").isEmpty() ? null : LocalDate.parse(request.getParameter("startDate"));
-        LocalDate endDate = request.getParameter("endDate") == null || request.getParameter("endDate").isEmpty() ? null : LocalDate.parse(request.getParameter("endDate"));
-        LocalTime startTime = request.getParameter("startTime") == null || request.getParameter("startTime").isEmpty() ? null : LocalTime.parse(request.getParameter("startTime"));
-        LocalTime endTime = request.getParameter("endTime") == null || request.getParameter("endTime").isEmpty() ? null : LocalTime.parse(request.getParameter("endTime"));
-
         switch (action == null ? "all" : action) {
             case "delete":
                 int id = getId(request);
@@ -81,8 +76,23 @@ public class MealServlet extends HttpServlet {
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals",
-                        mealController.getAllTos(startDate, endDate, startTime, endTime));
+
+                String startDateParam = request.getParameter("startDate");
+                LocalDate startDate = startDateParam == null || startDateParam.isEmpty() ? null : LocalDate.parse(startDateParam);
+                String endDateParam = request.getParameter("endDate");
+                LocalDate endDate = endDateParam == null || endDateParam.isEmpty() ? null : LocalDate.parse(endDateParam);
+                String startTimeParam = request.getParameter("startTime");
+                LocalTime startTime = startTimeParam == null || startTimeParam.isEmpty() ? null : LocalTime.parse(startTimeParam);
+                String endTimeParam = request.getParameter("endTime");
+                LocalTime endTime = endTimeParam == null || endTimeParam.isEmpty() ? null : LocalTime.parse(endTimeParam);
+
+                if (startDateParam == null && endDateParam == null && startTimeParam == null && endTimeParam == null) {
+                    request.setAttribute("meals", mealController.getAllTos());
+                } else {
+                    request.setAttribute("meals",
+                            mealController.getFilteredByDateTimeTos(startDate, endDate, startTime, endTime));
+                }
+
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
