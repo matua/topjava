@@ -1,0 +1,95 @@
+package ru.javawebinar.topjava.service;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.test.context.junit4.SpringRunner;
+import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.List;
+
+import static org.junit.Assert.assertThrows;
+import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+
+@ContextConfiguration({
+        "classpath:spring/spring-app.xml",
+        "classpath:spring/spring-db.xml"
+})
+@RunWith(SpringRunner.class)
+@Sql(scripts = "classpath:db/initDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+public class MealServiceTest {
+
+    static {
+        SLF4JBridgeHandler.install();
+    }
+
+    @Autowired
+    private MealService service;
+
+    @Test
+    public void get() {
+        Meal meal = service.get(MEAL_ID, USER_ID);
+        Meal expectedMeal = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
+        expectedMeal.setId(100_000);
+        assertMatch(meal, expectedMeal);
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, USER_ID + 1));
+    }
+
+    @Test
+    public void delete() {
+        assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID, USER_ID + 1));
+        service.delete(MEAL_ID, USER_ID);
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, USER_ID));
+    }
+
+
+    @Test
+    public void getBetweenInclusive() {
+        LocalDate startDate = LocalDate.of(2020, Month.JANUARY, 30);
+        LocalDate endDate = LocalDate.of(2020, Month.JANUARY, 30);
+
+        assertMatch(getFilteredMeals(), service.getBetweenInclusive(startDate, endDate, USER_ID));
+
+    }
+
+    @Test
+    public void getAll() {
+        List<Meal> all = service.getAll(USER_ID);
+        int id = 100_000;
+        for (Meal meal : meals) {
+            meal.setId(id);
+            id++;
+        }
+        meals.sort((o1, o2) -> o2.getId() - o1.getId());
+        assertMatch(all, meals);
+    }
+
+    @Test
+    public void update() {
+        Meal updated = MealTestData.getUpdated();
+        service.update(updated, USER_ID);
+        assertMatch(service.get(updated.getId(), USER_ID), updated);
+        assertThrows(NotFoundException.class, () -> service.update(updated, USER_ID + 1));
+    }
+
+    @Test
+    public void create() {
+        Meal newMeal = MealTestData.getNew();
+        Meal created = service.create(newMeal, USER_ID);
+        Integer newId = created.getId();
+        newMeal.setId(newId);
+        assertMatch(created, newMeal);
+        assertMatch(service.get(newId, USER_ID), newMeal);
+    }
+}
