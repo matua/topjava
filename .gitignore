@@ -4,5 +4,13 @@ target
 *.iml
 log
 *.patch
-postgres.properties
-
+.DS_Store
+lib/
+patches/.DS_Store
+patches/patch-1/.DS_Store
+patches/patch-3/.DS_Store
+src/main/.DS_Store
+src/main/java/ru/javawebinar/topjava/learning/
+src/main/resources/.DS_Store
+src/main/webapp/.DS_Store
+src/main/resources/db/postgres.properties
