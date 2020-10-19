@@ -6,7 +6,6 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,18 +13,17 @@ import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
     public static final int MEAL_ID = START_SEQ;
-    public static final int NOT_FOUND = 10;
 
-    public static final Meal meal = new Meal(LocalDateTime.now(), "Some food", 500);
+    public static final Meal MEAL = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
 
-    public static final List<Meal> meals = MealsUtil.meals;
+    public static final List<Meal> MEALS = MealsUtil.meals;
 
     public static Meal getNew() {
         return new Meal(LocalDateTime.now(), "New food", 10);
     }
 
     public static Meal getUpdated() {
-        Meal updated = meal;
+        Meal updated = MEAL;
         updated.setDescription("Updated Food Description");
         updated.setDateTime(LocalDateTime.of(2020, Month.JUNE, 28, 11, 0));
         return updated;
@@ -54,10 +52,6 @@ public class MealTestData {
 
     public static void assertMatch(Meal actual, Meal expected) {
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    public static void assertMatch(Iterable<Meal> actual, Meal... expected) {
-        assertMatch(actual, Arrays.asList(expected));
     }
 
     public static void assertMatch(Iterable<Meal> actual, Iterable<Meal> expected) {

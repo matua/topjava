@@ -13,7 +13,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
@@ -26,8 +25,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringRunner.class)
-@Sql(scripts = "classpath:db/initDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+@Sql(scripts = {"classpath:db/initDB.sql", "classpath:db/populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
 
     static {
@@ -40,7 +38,7 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(MEAL_ID, USER_ID);
-        Meal expectedMeal = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
+        Meal expectedMeal = MealTestData.MEAL;
         expectedMeal.setId(100_000);
         assertMatch(meal, expectedMeal);
         assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, USER_ID + 1));
@@ -53,26 +51,23 @@ public class MealServiceTest {
         assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, USER_ID));
     }
 
-
     @Test
     public void getBetweenInclusive() {
         LocalDate startDate = LocalDate.of(2020, Month.JANUARY, 30);
         LocalDate endDate = LocalDate.of(2020, Month.JANUARY, 30);
-
         assertMatch(getFilteredMeals(), service.getBetweenInclusive(startDate, endDate, USER_ID));
-
     }
 
     @Test
     public void getAll() {
         List<Meal> all = service.getAll(USER_ID);
         int id = 100_000;
-        for (Meal meal : meals) {
+        for (Meal meal : MEALS) {
             meal.setId(id);
             id++;
         }
-        meals.sort((o1, o2) -> o2.getId() - o1.getId());
-        assertMatch(all, meals);
+        MEALS.sort((o1, o2) -> o2.getId() - o1.getId());
+        assertMatch(all, MEALS);
     }
 
     @Test
