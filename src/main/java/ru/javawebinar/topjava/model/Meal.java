@@ -5,11 +5,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Meal extends AbstractBaseEntity {
-    private LocalDateTime dateTime = null;
+    private LocalDateTime dateTime;
 
-    private String description = "";
+    private String description;
 
-    private int calories = 10;
+    private int calories;
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
         this(null, dateTime, description, calories);

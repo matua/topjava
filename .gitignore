@@ -13,4 +13,3 @@ src/main/.DS_Store
 src/main/java/ru/javawebinar/topjava/learning/
 src/main/resources/.DS_Store
 src/main/webapp/.DS_Store
-src/main/resources/db/postgres.properties
