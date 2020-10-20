@@ -43,7 +43,8 @@ public class MealServiceTest {
     }
 
     @Test
-    public void getWithUnauthorizedUserId() {
+    public void
+    getWithWrongId() {
         assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, ADMIN_ID));
     }
 
