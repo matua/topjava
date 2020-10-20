@@ -19,9 +19,12 @@ import java.util.List;
 
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-@ContextConfiguration("classpath:spring/spring-app.xml")
+@ContextConfiguration({"classpath:spring/spring-jdbc.xml",
+        "classpath:spring/spring-service-web.xml",
+        "classpath:spring/spring-db.xml"})
 @RunWith(SpringRunner.class)
 @Sql(scripts = {"classpath:db/initDB.sql", "classpath:db/populateDB.sql"}, config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
@@ -36,13 +39,12 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal meal = service.get(MEAL_ID, USER_ID);
-        Meal expectedMeal = MealTestData.expectedMeal;
-        assertMatch(meal, expectedMeal);
+        assertMatch(meal, meal1);
     }
 
     @Test
     public void getWithUnauthorizedUserId() {
-        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, UNAUTHORIZED_USER_ID));
+        assertThrows(NotFoundException.class, () -> service.get(MEAL_ID, ADMIN_ID));
     }
 
     @Test
@@ -53,20 +55,22 @@ public class MealServiceTest {
 
     @Test
     public void deleteWithUnauthorizedUserId() {
-        assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID, UNAUTHORIZED_USER_ID));
+        assertThrows(NotFoundException.class, () -> service.delete(MEAL_ID, ADMIN_ID));
     }
 
     @Test
     public void getBetweenInclusive() {
         LocalDate startDate = LocalDate.of(2020, Month.JANUARY, 30);
         LocalDate endDate = LocalDate.of(2020, Month.JANUARY, 30);
-        assertMatch(filtered_meals, service.getBetweenInclusive(startDate, endDate, USER_ID));
+        assertMatch(service.getBetweenInclusive(startDate, endDate, USER_ID), filteredMealJanuary30);
+        startDate = LocalDate.of(2020, Month.JANUARY, 31);
+        endDate = LocalDate.of(2020, Month.JANUARY, 31);
+        assertMatch(service.getBetweenInclusive(startDate, endDate, USER_ID), filteredMealJanuary31);
     }
 
     @Test
     public void getAll() {
         List<Meal> all = service.getAll(USER_ID);
-        allMeals.sort((o1, o2) -> o2.getDateTime().compareTo(o1.getDateTime()));
         assertMatch(all, userOneMeals);
     }
 
@@ -79,7 +83,7 @@ public class MealServiceTest {
 
     @Test
     public void updateWithUnauthorizedUserId() {
-        assertThrows(NotFoundException.class, () -> service.update(mealToUpdate, UNAUTHORIZED_USER_ID));
+        assertThrows(NotFoundException.class, () -> service.update(mealToUpdate, ADMIN_ID));
     }
 
     @Test

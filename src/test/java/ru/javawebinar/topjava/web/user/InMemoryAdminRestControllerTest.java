@@ -16,7 +16,7 @@ import java.util.Arrays;
 import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-@ContextConfiguration("classpath:spring/spring-inmemory-tests.xml")
+@ContextConfiguration({"classpath:spring/spring-inmemory-tests.xml", "classpath:spring/spring-service-web.xml"})
 @RunWith(SpringRunner.class)
 public class InMemoryAdminRestControllerTest {
     private static final Logger log = LoggerFactory.getLogger(InMemoryAdminRestControllerTest.class);
@@ -27,7 +27,7 @@ public class InMemoryAdminRestControllerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-inmemory-tests.xml");
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-inmemory-tests.xml", "classpath:spring/spring-service-web.xml");
         log.info("\n{}\n", Arrays.toString(appCtx.getBeanDefinitionNames()));
         controller = appCtx.getBean(AdminRestController.class);
         repository = appCtx.getBean(InMemoryUserRepository.class);
@@ -39,19 +39,19 @@ public class InMemoryAdminRestControllerTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // re-initialize
         repository.init();
     }
 
     @Test
-    public void delete() throws Exception {
+    public void delete() {
         controller.delete(USER_ID);
         Assert.assertNull(repository.get(USER_ID));
     }
 
     @Test
-    public void deleteNotFound() throws Exception {
+    public void deleteNotFound() {
         Assert.assertThrows(NotFoundException.class, () -> controller.delete(NOT_FOUND));
     }
 }

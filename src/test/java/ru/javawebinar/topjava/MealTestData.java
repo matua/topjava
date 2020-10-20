@@ -8,17 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class MealTestData {
     public static final int MEAL_ID = START_SEQ;
-
-    public static final int UNAUTHORIZED_USER_ID = USER_ID + 1;
-
-    public static final LocalDateTime duplicateDateTime = LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0);
-
-    public static final Meal expectedMeal = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
 
     public static final Meal meal1 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500);
     public static final Meal meal2 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000);
@@ -36,11 +29,12 @@ public class MealTestData {
     public static final Meal meal2_6 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 15, 0), "Обед2", 50);
     public static final Meal meal2_7 = new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 9, 0), "Ужин2", 41);
 
-    public static final List<Meal> allMeals = Arrays.asList(meal1, meal2, meal3, meal4, meal5, meal6, meal7, meal2_1, meal2_2, meal2_3, meal2_4, meal2_5, meal2_6, meal2_7);
+    public static final LocalDateTime duplicateDateTime = meal1.getDateTime();
 
     public final static List<Meal> userOneMeals = Arrays.asList(meal7, meal6, meal5, meal4, meal3, meal2, meal1);
 
-    public static final List<Meal> filtered_meals = Arrays.asList(meal1, meal2, meal3, meal4);
+    public static final List<Meal> filteredMealJanuary30 = Arrays.asList(meal3, meal2, meal1);
+    public static final List<Meal> filteredMealJanuary31 = Arrays.asList(meal7, meal6, meal5, meal4);
 
     public static final Meal mealToUpdate = new Meal(LocalDateTime.of(2020, Month.JUNE, 28, 11, 0),
             "Happy Birthday Meal", 10000);
@@ -60,7 +54,6 @@ public class MealTestData {
         meal2_5.setId(MEAL_ID + 11);
         meal2_6.setId(MEAL_ID + 12);
         meal2_7.setId(MEAL_ID + 13);
-        expectedMeal.setId(MEAL_ID);
         mealToUpdate.setId(MEAL_ID);
     }
 
