@@ -1,19 +1,34 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import org.hibernate.validator.constraints.Range;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
+@Entity
+@Table(name = "meals")
 public class Meal extends AbstractBaseEntity {
+    @NotNull
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "date_time", nullable = false)
     private LocalDateTime dateTime;
 
+    @NotNull
+    @Column(name = "description")
     private String description;
 
+    @NotNull
+    @Range(min = 10, max = 10000)
+    @Column(name = "calories")
     private int calories;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Meal() {
@@ -34,12 +49,24 @@ public class Meal extends AbstractBaseEntity {
         return dateTime;
     }
 
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
     public String getDescription() {
         return description;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public int getCalories() {
         return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
     }
 
     public LocalDate getDate() {
@@ -48,18 +75,6 @@ public class Meal extends AbstractBaseEntity {
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCalories(int calories) {
-        this.calories = calories;
     }
 
     public User getUser() {
@@ -78,5 +93,29 @@ public class Meal extends AbstractBaseEntity {
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Meal meal = (Meal) o;
+
+        if (calories != meal.calories) return false;
+        if (!Objects.equals(dateTime, meal.dateTime)) return false;
+        if (!Objects.equals(description, meal.description)) return false;
+        return Objects.equals(user, meal.user);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + (dateTime != null ? dateTime.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + calories;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
     }
 }
