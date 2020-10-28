@@ -16,7 +16,7 @@ public class TestDuration extends Stopwatch {
         String testName = description.getMethodName();
         String testResult = String.format("\"Test %s\" - duration: %d microseconds",
                 testName, TimeUnit.NANOSECONDS.toMicros(nanos));
-        allTestsResult.append(description)
+        allTestsResult.append(testName)
                 .append(" - duration: ")
                 .append(nanos)
                 .append(System.lineSeparator());
