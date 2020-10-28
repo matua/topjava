@@ -1,22 +1,27 @@
 <configuration>
-
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
     </contextListener>
-
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <charset>UTF-8</charset>
             <pattern>%d{HH:mm:ss.SSS} %-5level %class{50}.%M:%L - %msg%n</pattern>
         </encoder>
     </appender>
-
+    <appender name="duration_logger" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{15}) %blue(%class{50}.%M:%L) -
+                %boldGreen(%msg%n)
+            </pattern>
+        </encoder>
+    </appender>
     <logger name="org.postgresql" level="debug"/>
     <logger name="org.springframework.jdbc" level="info"/>
-    <logger name="ru.javawebinar.topjava" level="debug"/>
-
+    <logger name="ru.javawebinar.topjava" level="debug" additivity="false">
+        <appender-ref ref="duration_logger"/>
+    </logger>
     <root level="INFO">
         <appender-ref ref="console"/>
     </root>
-
 </configuration>
