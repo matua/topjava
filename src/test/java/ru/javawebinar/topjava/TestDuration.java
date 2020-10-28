@@ -14,11 +14,16 @@ public class TestDuration extends Stopwatch {
 
     private static void logInfo(Description description, long nanos) {
         String testName = description.getMethodName();
-        String testResult = String.format("\"Test %s\" - duration: %d microseconds",
-                testName, TimeUnit.NANOSECONDS.toMicros(nanos));
-        allTestsResult.append(testName)
-                .append(" - duration: ")
-                .append(nanos)
+        long seconds = TimeUnit.NANOSECONDS.
+                toMillis(nanos);
+        String testResult = String.format("\"Test %s\" - duration: %d milliseconds",
+                testName, seconds);
+        allTestsResult
+                .append("\t")
+                .append(testName)
+                .append(" - ")
+                .append(seconds)
+                .append(" milliseconds")
                 .append(System.lineSeparator());
         log.debug(testResult);
     }
@@ -30,11 +35,12 @@ public class TestDuration extends Stopwatch {
                 .append(System.lineSeparator())
                 .append("Tests Results:")
                 .append(System.lineSeparator())
+                .append(System.lineSeparator())
                 .append(allTestsResult).toString();
     }
 
     @Override
-    protected void succeeded(long nanos, Description description) {
+    protected void finished(long nanos, Description description) {
         logInfo(description, nanos);
     }
 }

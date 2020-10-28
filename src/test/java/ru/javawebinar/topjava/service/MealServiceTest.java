@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import ru.javawebinar.topjava.TestDuration;
@@ -27,14 +28,15 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml",
-
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 @TestExecutionListeners(value = {
         TestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class
-})
+        DependencyInjectionTestExecutionListener.class,
+        SqlScriptsTestExecutionListener.class
+},
+        mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 
 public class MealServiceTest {
     @Rule
