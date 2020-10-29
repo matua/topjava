@@ -9,9 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import ru.javawebinar.topjava.TestDuration;
 import ru.javawebinar.topjava.TestExecutionListener;
 import ru.javawebinar.topjava.model.Meal;
@@ -31,11 +29,7 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 })
 @RunWith(SpringRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-@TestExecutionListeners(value = {
-        TestExecutionListener.class,
-        DependencyInjectionTestExecutionListener.class,
-        SqlScriptsTestExecutionListener.class
-},
+@TestExecutionListeners(value = TestExecutionListener.class,
         mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS)
 
 public class MealServiceTest {
