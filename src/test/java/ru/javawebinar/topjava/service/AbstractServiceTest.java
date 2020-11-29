@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.rules.ExternalResource;
@@ -13,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.ActiveDbProfileResolver;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.TimingRules;
 
 import java.util.Arrays;
@@ -29,18 +32,22 @@ import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 @ActiveProfiles(resolver = ActiveDbProfileResolver.class)
 abstract public class AbstractServiceTest {
 
-    @Autowired
-    private Environment environment;
-
     @ClassRule
     public static ExternalResource summary = TimingRules.SUMMARY;
 
     @Rule
     public Stopwatch stopwatch = TimingRules.STOPWATCH;
 
+    @Autowired
+    protected Environment environment;
 
-    protected boolean isJdbc() {
-        return Arrays.asList(environment.getActiveProfiles()).contains("jdbc");
+    @BeforeClass
+    public static void checkProfile() {
+        Assume.assumeFalse(isJdbc());
+    }
+
+    protected static boolean isJdbc() {
+        return Arrays.asList(environment.getActiveProfiles()).contains(Profiles.JDBC);
     }
 
     //  Check root cause in JUnit: https://github.com/junit-team/junit4/pull/778

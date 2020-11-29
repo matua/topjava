@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,11 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
-import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 /*
 Generally, I prefer to only use @RequestMapping at the class level to specify the base
@@ -34,7 +34,7 @@ public class JspMealController extends AbstractMealController {
     }
 
     @GetMapping("delete")
-    public String delete(@RequestParam(name = "id") Integer id) {
+    public String delete(Integer id) {
         super.delete(id);
         return "redirect:/meals";
     }
@@ -57,24 +57,25 @@ public class JspMealController extends AbstractMealController {
     @GetMapping("filter")
     public String filter(
             Model model,
-            @RequestParam String startDate,
-            @RequestParam String endDate,
-            @RequestParam String startTime,
-            @RequestParam String endTime
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime startTime,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime endTime
+
     ) {
-        model.addAttribute("meals", super.getBetween(parseLocalDate(startDate), parseLocalTime(startTime), parseLocalDate(endDate), parseLocalTime(endTime)));
+        model.addAttribute("meals", super.getBetween(startDate, startTime, endDate, endTime));
         return "meals";
     }
 
     @PostMapping()
     public String processCreateUpdateForm(
-            @RequestParam String dateTime,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
             @RequestParam String description,
             @RequestParam Integer calories,
             @RequestParam(name = "id", required = false) Integer id
     ) {
         Meal meal = new Meal(
-                LocalDateTime.parse(dateTime),
+                dateTime,
                 description,
                 calories);
 
