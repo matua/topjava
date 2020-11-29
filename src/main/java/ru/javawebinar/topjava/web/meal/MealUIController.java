@@ -18,8 +18,8 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalDate;
 import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 @Controller
-@RequestMapping(value = "/meals")
-public class JspMealController extends AbstractMealController {
+@RequestMapping("/meals")
+public class MealUIController extends AbstractMealController {
 
     @GetMapping("/delete")
     public String delete(HttpServletRequest request) {
